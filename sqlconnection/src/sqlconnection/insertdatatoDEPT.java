@@ -23,7 +23,7 @@ public class insertdatatoDEPT {
 		try {
 			Statement st = con.createStatement();
 			int cnt = st.executeUpdate(String.format(String
-					.format("insert into dept (dno, dname, budget) values ('%s', '%s', '%d')", dno, dname, budget)));
+					.format("insert into dept (dno, dname, budget) values ('%s', '%s', '%d')", dno, dname, budget))); //Int를 return함. 즉 업데이트 된 레코드의 갯수를 return함.
 
 			System.out.println("데이터베이스가 입력되었습니다.");
 		} catch (SQLException e) {
@@ -47,27 +47,6 @@ public class insertdatatoDEPT {
 		}
 		System.out.println("데이터베이스가 입력되었습니다.");
 
-	}
-
-	private boolean connectDB() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "YeDongVibe", "1234");
-			System.out.println("데이터베이스가 연결되었습니다.");
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	private void closeDB() {
-		try {
-			con.close();
-			System.out.println("데이터베이스가 닫혔습니다.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void deleteDepttriggerStatement(int from, int to) {
@@ -97,13 +76,63 @@ public class insertdatatoDEPT {
 
 	}
 
+	private void updateDeptStatement(String dno, String dname, int budget) {
+		try {
+			Statement st = con.createStatement();
+			int cnt = st.executeUpdate(
+					String.format(String.format("Update dept set dname = '%s', budget = '%d' where dno = '%s'", dname, budget, dno)));
+
+			System.out.println("데이터가" + cnt + "개가 업데이트되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void updateDeptPrepared(String dno, String dname, int budget) {
+		
+		try {
+			PreparedStatement ps = con.prepareStatement("Update dept set dname =?, budget =? where dno =?");
+			ps.setString(1, dname);
+			ps.setInt(2, budget);
+			ps.setString(3, dno);
+			ps.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private boolean connectDB() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/warehouse", "YeDongVibe", "1234");
+			System.out.println("데이터베이스가 연결되었습니다.");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	private void closeDB() {
+		try {
+			con.close();
+			System.out.println("데이터베이스가 닫혔습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) {
 		insertdatatoDEPT tt = new insertdatatoDEPT();
 		if (tt.connectDB()) {
 			// tt.insertDept("d10", "dname", 123);
 			// tt.insertDeptStatement("d11", "dname", 556);
 			// tt.deleteDepttriggerStatement(1, 10);
-			tt.deleteDepttriggePrepared(11, 12);
+			//tt.deleteDepttriggePrepared(11, 12);
+			tt.updateDeptStatement("D6", "dname1", 1000);
+			//tt.updateDeptPrepared("d6", "dname2", 10000);
 			tt.closeDB();
 		}
 
