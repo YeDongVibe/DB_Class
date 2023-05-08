@@ -99,7 +99,7 @@ public class sqlinsertdataback {
 
 		Connection con = aa.connectDB();
 		if (con != null) {
-			//aa.insertContactWithStatement(con);
+			aa.insertContactWithStatement(con);
 			aa.insertPhoneWithPreStatement(con);
 			aa.closeDB(con);
 		}
